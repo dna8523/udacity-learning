@@ -45,5 +45,15 @@ class Vector(object):
         for x in self.coordinates:
             new_coordinates.append((1. / self.magnitude()) * x)
         return Vector(new_coordinates)
-a = Vector([1.996,3.108,-4.554])
-print a.normalize()
+
+    def dot_product(self,v):
+        return sum([x*y for x,y in zip(self.coordinates,v.coordinates)])
+
+    def angle(self,v):
+        if self.magnitude() == 0 or v.magnitude() == 0:
+            raise ValueError('zero vector detected')
+        result = math.acos(self.dot_product(v)/(self.magnitude()*v.magnitude()))
+        return result,math.degrees(result)
+a = Vector([7.35,0.221,5.188])
+b = Vector([2.751,8.259,3.985])
+print a.angle(b)
