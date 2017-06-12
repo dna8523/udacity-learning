@@ -96,7 +96,28 @@ class Line(object):
                 return k
         raise Exception(Line.NO_NONZERO_ELTS_FOUND_MSG)
 
+    def is_parallel_line(self,line):
+        n1 = Vector(self.normal_vector)
+        n2 = Vector(line.normal_vector)
+        return n1.is_parallel(n2)
+
+    def is_same_line(self,line):
+        p1 = Vector([0,self.constant_term/self.normal_vector[1]])
+        p2 = Vector([line.constant_term/line.normal_vector[0],0])
+        v = p1.subtract(p2)
+        n1 = Vector(self.normal_vector)
+        n2 = Vector(line.normal_vector)
+        return self.is_parallel_line(line) and v.is_orthognal(n1) and v.is_orthognal(n2)
+
+
 
 class MyDecimal(Decimal):
     def is_near_zero(self, eps=1e-10):
         return abs(self) < eps
+
+
+
+
+l1 = Line([1,1],1)
+l2 =Line([2,2],2)
+print l1.is_same_line(l2)
