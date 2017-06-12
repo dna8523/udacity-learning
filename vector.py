@@ -46,23 +46,25 @@ class Vector(object):
             new_coordinates.append((1. / self.magnitude()) * x)
         return Vector(new_coordinates)
 
-    def dot_product(self,v):
+    def dot(self,v):
         return sum([x*y for x,y in zip(self.coordinates,v.coordinates)])
 
     def angle(self,v):
         if self.magnitude() == 0 or v.magnitude() == 0:
             raise ValueError('zero vector detected')
-        result = acos(self.dot_product(v)/(self.magnitude()*v.magnitude()))
+        result = round(acos(self.dot(v)/(self.magnitude()*v.magnitude())),3)
         return result
 
     def is_parallel(self,v):
         return self.is_zero() or v.is_zero() or self.angle(v) == pi or self.angle(v) == 0
+
+    def is_orthognal(self,v,tolerance=1e-10):
+        return abs(self.dot(v)) < tolerance
 
     def is_zero(self):
         for i in self.coordinates:
             if i != 0:
                 return False
         return True
-
 
 
