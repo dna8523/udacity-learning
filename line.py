@@ -13,7 +13,7 @@ class Line(object):
         self.dimension = 2
 
         if not normal_vector:
-            all_zeros = ['0']*self.dimension
+            all_zeros = ['0'] * self.dimension
             normal_vector = Vector(all_zeros)
         self.normal_vector = normal_vector
 
@@ -23,17 +23,16 @@ class Line(object):
 
         self.set_basepoint()
 
-
     def set_basepoint(self):
         try:
             n = self.normal_vector
             c = self.constant_term
-            basepoint_coords = ['0']*self.dimension
+            basepoint_coords = ['0'] * self.dimension
 
             initial_index = Line.first_nonzero_index(n)
             initial_coefficient = n[initial_index]
 
-            basepoint_coords[initial_index] = c/initial_coefficient
+            basepoint_coords[initial_index] = c / initial_coefficient
             self.basepoint = Vector(basepoint_coords)
 
         except Exception as e:
@@ -41,7 +40,6 @@ class Line(object):
                 self.basepoint = None
             else:
                 raise e
-
 
     def __str__(self):
 
@@ -71,7 +69,7 @@ class Line(object):
 
         try:
             initial_index = Line.first_nonzero_index(n)
-            terms = [write_coefficient(n[i], is_initial_term=(i==initial_index)) + 'x_{}'.format(i+1)
+            terms = [write_coefficient(n[i], is_initial_term=(i == initial_index)) + 'x_{}'.format(i + 1)
                      for i in range(self.dimension) if round(n[i], num_decimal_places) != 0]
             output = ' '.join(terms)
 
@@ -88,6 +86,19 @@ class Line(object):
 
         return output
 
+    def is_parallel_line(self, line):
+        n1 = Vector(self.normal_vector)
+        n2 = Vector(line.normal_vector)
+        return n1.is_parallel(n2)
+
+    def __eq__(self, line):
+        p1 = Vector([0, self.constant_term / self.normal_vector[1]])
+        p2 = Vector([line.constant_term / line.normal_vector[0], 0])
+        v = p1.subtract(p2)
+        return self.is_parallel_line(line) and v.is_orthognal(Vector([self.normal_vector]))
+
+    def intersection(self,line):
+        
 
     @staticmethod
     def first_nonzero_index(iterable):
@@ -96,28 +107,12 @@ class Line(object):
                 return k
         raise Exception(Line.NO_NONZERO_ELTS_FOUND_MSG)
 
-    def is_parallel_line(self,line):
-        n1 = Vector(self.normal_vector)
-        n2 = Vector(line.normal_vector)
-        return n1.is_parallel(n2)
-
-    def is_same_line(self,line):
-        p1 = Vector([0,self.constant_term/self.normal_vector[1]])
-        p2 = Vector([line.constant_term/line.normal_vector[0],0])
-        v = p1.subtract(p2)
-        n1 = Vector(self.normal_vector)
-        n2 = Vector(line.normal_vector)
-        return self.is_parallel_line(line) and v.is_orthognal(n1) and v.is_orthognal(n2)
-
-
 
 class MyDecimal(Decimal):
     def is_near_zero(self, eps=1e-10):
         return abs(self) < eps
 
 
-
-
-l1 = Line([1,1],1)
-l2 =Line([2,2],2)
-print l1.is_same_line(l2)
+l1 = Line([1, 1], 1)
+l2 = Line([2, 2], 2)
+print l1.is_parallel_line(l2)
