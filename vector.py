@@ -27,7 +27,7 @@ class Vector(object):
         return Vector(new_coordinates)
 
     def subtract(self, v):
-        new_coordinates = [x - y for x,
+        new_coordinates = [round(x - y, 3) for x,
                            y in zip(self.coordinates, v.coordinates)]
         return Vector(new_coordinates)
 
