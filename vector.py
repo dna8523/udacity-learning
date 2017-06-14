@@ -1,5 +1,6 @@
 from math import *
 
+
 class Vector(object):
     def __init__(self, coordinates):
         try:
@@ -14,23 +15,23 @@ class Vector(object):
         except TypeError:
             raise TypeError('The coordinates must be an iterable')
 
-
     def __str__(self):
         return 'Vector: {}'.format(self.coordinates)
-
 
     def __eq__(self, v):
         return self.coordinates == v.coordinates
 
-    def plus(self,v):
-        new_coordinates = [x + y for x,y in zip(self.coordinates,v.coordinates)]
+    def plus(self, v):
+        new_coordinates = [x + y for x,
+                           y in zip(self.coordinates, v.coordinates)]
         return Vector(new_coordinates)
 
-    def subtract(self,v):
-        new_coordinates = [x-y for x,y in zip(self.coordinates,v.coordinates)]
+    def subtract(self, v):
+        new_coordinates = [x - y for x,
+                           y in zip(self.coordinates, v.coordinates)]
         return Vector(new_coordinates)
 
-    def scalar_multiply(self,c):
+    def scalar_multiply(self, c):
         new_coordinates = [c * x for x in self.coordinates]
         return Vector(new_coordinates)
 
@@ -46,19 +47,21 @@ class Vector(object):
             new_coordinates.append((1. / self.magnitude()) * x)
         return Vector(new_coordinates)
 
-    def dot(self,v):
-        return sum([x*y for x,y in zip(self.coordinates,v.coordinates)])
+    def dot(self, v):
+        return sum([x * y for x, y in zip(self.coordinates, v.coordinates)])
 
-    def angle(self,v):
+    def angle(self, v):
         if self.magnitude() == 0 or v.magnitude() == 0:
             raise ValueError('zero vector detected')
-        result = round(acos(self.dot(v)/(self.magnitude()*v.magnitude())),3)
+        t = round(self.dot(v) / (self.magnitude() * v.magnitude()), 3)
+        result = round(acos(t), 3)
+
         return result
 
-    def is_parallel(self,v):
+    def is_parallel(self, v):
         return self.is_zero() or v.is_zero() or self.angle(v) == pi or self.angle(v) == 0
 
-    def is_orthognal(self,v,tolerance=1e-10):
+    def is_orthognal(self, v, tolerance=1e-10):
         return abs(self.dot(v)) < tolerance
 
     def is_zero(self):
@@ -66,5 +69,3 @@ class Vector(object):
             if i != 0:
                 return False
         return True
-
-
