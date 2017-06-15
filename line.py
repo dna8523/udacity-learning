@@ -126,10 +126,3 @@ class MyDecimal(Decimal):
     def is_near_zero(self, eps=1e-10):
         return abs(self) < eps
 
-
-l1 = Line([1.182, 5.562], 6.744)
-l2 = Line([1.773, 8.343], 9.525)
-v = l1.basepoint.subtract(l2.basepoint)
-n1 = Vector(l1.normal_vector)
-n2 = Vector(l2.normal_vector)
-print l1 == l2, l1.intersection(l2), l1.is_parallel_line(l2)
