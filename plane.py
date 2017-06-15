@@ -98,7 +98,7 @@ class Plane(object):
         p1 = self.basepoint
         p2 = plane.basepoint
         diff = p1.subtract(p2)
-        return v.is_orthognal(diff)
+        return n.is_orthognal(diff)
 
     @staticmethod
     def first_nonzero_index(iterable):
@@ -111,8 +111,3 @@ class Plane(object):
 class MyDecimal(Decimal):
     def is_near_zero(self, eps=1e-10):
         return abs(self) < eps
-
-
-plane1 = Plane([-0.412, 3.806, 0.728], -3.46)
-plane2 = Plane([1.03, -9.515, -1.82], 8.65)
-print plane1.basepoint.subtract(plane2.basepoint), Vector(plane1.normal_vector)
