@@ -59,7 +59,7 @@ class Vector(object):
         return result
 
     def is_parallel(self, v):
-        return self.is_zero() or v.is_zero() or self.angle(v) == pi or self.angle(v) == 0
+        return self.is_zero() or v.is_zero() or self.angle(v) == round(pi, 3) or self.angle(v) == 0
 
     def is_orthognal(self, v, tolerance=1e-10):
         return abs(self.dot(v)) < tolerance
