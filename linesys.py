@@ -40,10 +40,8 @@ class LinearSystem(object):
         t, c = self.planes[row_to_add].normal_vector, self.planes[row_to_add].constant_term
         t1, c1 = self.planes[row_to_be_added_to].normal_vector, self.planes[row_to_be_added_to].constant_term
         for i in range(len(t)):
-            self.planes[row_to_be_added_to].normal_vector[i] = t[i] * \
-                coefficient + t1[i]
-        self.planes[row_to_be_added_to].constant_term = c * coefficient + c1
-        self.planes[row_to_be_added_to].set_basepoint()
+            t1[i] += t[i] * coefficient
+        self.planes[row_to_be_added_to] = Plane(t1,c * coefficient + c1)
 
     def indices_of_first_nonzero_terms_in_each_row(self):
         num_equations = len(self)
