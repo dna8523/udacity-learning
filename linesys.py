@@ -43,6 +43,7 @@ class LinearSystem(object):
             self.planes[row_to_be_added_to].normal_vector[i] = t[i] * \
                 coefficient + t1[i]
         self.planes[row_to_be_added_to].constant_term = c * coefficient + c1
+        self.planes[row_to_be_added_to].set_basepoint()
 
     def indices_of_first_nonzero_terms_in_each_row(self):
         num_equations = len(self)
@@ -138,10 +139,9 @@ if not (s[0] == p1 and
         s[3] == p3):
     print 'test case 8 failed'
 
-s.add_multiple_times_row_to_row(-1, 1, 0)
+s.add_multiple_times_row_to_row(-1,1,0)
 if not (s[0] == Plane([-10, -10, -10], -10) and
         s[1] == Plane([10, 11, 10], 12) and
         s[2] == Plane([-1, -1, 1], -3) and
         s[3] == p3):
     print 'test case 9 failed'
-print s[0], '\n', Plane([-10, -10, -10], -10), '\n', s[0] == Plane([-10, -10, -10], -10), '\n', s[0].is_parallel_plane(Plane([-10, -10, -10], -10))
