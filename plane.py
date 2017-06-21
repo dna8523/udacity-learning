@@ -14,7 +14,7 @@ class Plane(object):
 
         if not normal_vector:
             all_zeros = [0] * self.dimension
-            normal_vector = Vector(all_zeros)
+            normal_vector = all_zeros
         self.normal_vector = normal_vector
 
         if not constant_term:
