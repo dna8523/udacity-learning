@@ -37,7 +37,7 @@ class Plane(object):
 
         except Exception as e:
             if str(e) == Plane.NO_NONZERO_ELTS_FOUND_MSG:
-                self.basepoint = None
+                self.basepoint = Vector(basepoint_coords)
             else:
                 raise e
 
@@ -97,6 +97,8 @@ class Plane(object):
         n = Vector(self.normal_vector)
         p1 = self.basepoint
         p2 = plane.basepoint
+        if p1 == p2:
+            return True
         diff = p1.subtract(p2)
         return n.is_orthognal(diff)
 
