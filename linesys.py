@@ -57,12 +57,21 @@ class LinearSystem(object):
                     system.swap_rows(i, top_index)
                 else:
                     if c < i and c != -1:
-                        row_to_multiply = system.topmost_index(c)
-                        coefficient = system[i].normal_vector[c] / \
-                            system[row_to_multiply].normal_vector[c] * (-1)
-                        system.add_multiple_times_row_to_row(
-                            coefficient, c, i)
+                        for t in range(i - c):
+                            row_to_multiply = system.topmost_index(c + t)
+                            coefficient = system[i].normal_vector[c + t] / \
+                                system[row_to_multiply].normal_vector[c +
+                                                                      t] * (-1)
+                            system.add_multiple_times_row_to_row(
+                                coefficient, c + t, i)
+
         return system
+
+    def compute_rref(self):
+        r = self.compute_triangular_form()
+        indices = r.indices_of_first_nonzero_terms_in_each_row()
+
+        return r
 
     def topmost_index(self, idex):
         indices = self.indices_of_first_nonzero_terms_in_each_row()
@@ -118,39 +127,42 @@ class MyDecimal(Decimal):
         return abs(self) < eps
 
 
-p1 = Plane([1, 1, 1], 1)
-p2 = Plane([0, 1, 1], 2)
-s = LinearSystem([p1, p2])
-t = s.compute_triangular_form()
-if not (t[0] == p1 and
-        t[1] == p2):
-    print 'test case 1 failed'
+# p1 = Plane([1, 1, 1], 1)
+# p2 = Plane([0, 1, 1], 2)
+# s = LinearSystem([p1, p2])
+# r = s.compute_rref()
+# if not (r[0] == Plane([1, 0, 0], -1) and
+#         r[1] == p2):
+#     print 'test case 1 failed'
+#
+# p1 = Plane([1, 1, 1], 1)
+# p2 = Plane([1, 1, 1], 2)
+# s = LinearSystem([p1, p2])
+# r = s.compute_rref()
+# if not (r[0] == p1 and
+#         r[1] == Plane(constant_term=1)):
+#     print 'test case 2 failed'
+#
+# p1 = Plane([1, 1, 1], 1)
+# p2 = Plane([0, 1, 0], 2)
+# p3 = Plane([1, 1, -1], 3)
+# p4 = Plane([1, 0, -2], 2)
+# s = LinearSystem([p1, p2, p3, p4])
+# r = s.compute_rref()
+# if not (r[0] == Plane([1, 0, 0], 0) and
+#         r[1] == p2 and
+#         r[2] == Plane([0, 0, -2], 2) and
+#         r[3] == Plane()):
+#     print 'test case 3 failed'
 
-p1 = Plane([1, 1, 1], 1)
-p2 = Plane([1, 1, 1], 2)
-s = LinearSystem([p1, p2])
-t = s.compute_triangular_form()
-if not (t[0] == p1 and
-        t[1] == Plane(constant_term=1)):
-    print 'test case 2 failed'
-
-p1 = Plane([1, 1, 1], 1)
-p2 = Plane([0, 1, 0], 2)
-p3 = Plane([1, 1, -1], 3)
-p4 = Plane([1, 0, -2], 2)
-s = LinearSystem([p1, p2, p3, p4])
-t = s.compute_triangular_form()
-if not (t[0] == p1 and
-        t[1] == p2 and
-        t[2] == Plane([0, 0, -2], 2) and
-        t[3] == Plane()):
-    print 'test case 3 failed'
 p1 = Plane([0, 1, 1], 1)
 p2 = Plane([1, -1, 1], 2)
 p3 = Plane([1, 2, -5], 3)
 s = LinearSystem([p1, p2, p3])
-t = s.compute_triangular_form()
-if not (t[0] == Plane([1, -1, 1]), 2 and
-        t[1] == Plane([0, 1, 1], 1) and
-        t[2] == Plane([0, 0, -9], -2)):
-    print 'test case 4 failed'
+r = s.compute_rref()
+print r
+# if not (r[0] == Plane([1, 0, 0], round(23. / 9, 3)) and
+#         r[1] == Plane([0, 1, 0], round(7. / 9, 3)) and
+#         r[2] == Plane([0, 0, 1], round(2. / 9, 3)):
+#     print 'test case 4 failed'
+
