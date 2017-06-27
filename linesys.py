@@ -58,13 +58,13 @@ class LinearSystem(object):
                 else:
                     if c < i and c != -1:
                         for t in range(i - c):
-                            row_to_multiply = system.topmost_index(c + t)
-                            coefficient = system[i].normal_vector[c + t] / \
-                                system[row_to_multiply].normal_vector[c +
-                                                                      t] * (-1)
-                            system.add_multiple_times_row_to_row(
-                                coefficient, row_to_multiply, i)
-
+                            if system[system.topmost_index(c + t)].normal_vector[c + t] != 0:
+                                row_to_multiply = system.topmost_index(c + t)
+                                coefficient = system[i].normal_vector[c + t] / \
+                                    system[row_to_multiply].normal_vector[c +
+                                                                          t] * (-1)
+                                system.add_multiple_times_row_to_row(
+                                    coefficient, row_to_multiply, i)
         return system
 
     def compute_rref(self):
@@ -72,21 +72,19 @@ class LinearSystem(object):
         indices = r.indices_of_first_nonzero_terms_in_each_row()
         for row in range(len(r)):
             for col in range(r.dimension):
-                if col != indices[row] and col <= row and r[col].normal_vector[col] != 0:
+                if col != indices[row] and col < len(r) and r[col].normal_vector[col] != 0:
                     coefficient = float(r[row].normal_vector[col]) / \
                         r[col].normal_vector[col] * (-1)
                     r.add_multiple_times_row_to_row(coefficient, col, row)
+                if col == indices[row] and r[row].normal_vector[col] != 1:
+                    r.multiply_coefficient_and_row(
+                        1. / r[row].normal_vector[col], row)
         return r
 
     def output(self):
         r = self.compute_rref()
         indices = self.indices_of_first_nonzero_terms_in_each_row()
-        for i in range(len(r)):
-            if indices[i] < 0:
-                if r[i].constant_term == 0:
-                    return 'Infinite solutions'
-                else:
-                    return 'No solutions'
+        
         return r
 
     def topmost_index(self, idex):
@@ -142,8 +140,8 @@ class MyDecimal(Decimal):
         return abs(self) < eps
 
 
-p1 = Plane([5.862, 1.178, -10.366], -8.15)
-p2 = Plane([-2.931, -0.589, 5.183], -4.075)
+p1 = Plane([0.786, 0.786, 0.588], -0.714)
+p2 = Plane([-0.138, -0.138, 0.244], 0.319)
 s = LinearSystem([p1, p2])
 print s.output()
 
@@ -153,10 +151,9 @@ p3 = Plane([-2.158, 3.01, -1.727], -0.831)
 s = LinearSystem([p1, p2])
 print s.output()
 
-p1 = Plane([5.262, 2.739, -9.878], -3.441)
-p2 = Plane([5.111, 6.358, 7.638], -2.152)
-p3 = Plane([2.016, -9.924, -1.367], -9.278)
-p4 = Plane([2.167, -13.593, -18.883], -10.567)
+p1 = Plane([0.935, 1.76, -9.365], -9.955)
+p2 = Plane([0.187, 0.352, -1.873], -1.991)
+p3 = Plane([0.374, 0.704, -3.746], -3.982)
+p4 = Plane([-0.561, -1.056, 5.619], 5.973)
 s = LinearSystem([p1, p2, p3, p4])
 print s.output()
-
