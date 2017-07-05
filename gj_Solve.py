@@ -7,31 +7,25 @@ def gj_Solve(A, b, decPts=4, epsilon=1.0e-16):
         return None
     Ab = augmentMatrix(A, b)
     for c in range(len(A)):
-        maxabs = max(abs(el) for el in transpose(Ab)[c][c:])
+        (maxabs, max_row) = max((abs(el), index)
+                                for index, el in enumerate(transpose(Ab)[c][c:]))
+        max_row += c
         if maxabs < epsilon:
             return None
         else:
-            try:
-                max_row = transpose(Ab)[c].index(maxabs)
-                scale = 1. / maxabs
-            except ValueError:
-                max_row = transpose(A)[c].index(-1 * maxabs)
-                scale = -1. / maxabs
+            scale = 1. / Ab[max_row][c]
             if c != max_row:
                 swapRows(Ab, c, max_row)
-            if Ab[c][c] != 1:
+            if abs(Ab[c][c] - 1) > epsilon and abs(scale) > epsilon:
                 scaleRow(Ab, c, scale)
-                matxRound(Ab, decPts)
-            if sum(transpose(Ab)[c]) != 1:
-                for r in range(len(A)):
-                    if r != c and Ab[r][c] != 0:
-                        addScaledRow(Ab, r, c, -Ab[r][c])
-                        matxRound(Ab, decPts)
+            for r in range(len(A)):
+                if r != c and abs(Ab[r][c]) > epsilon:
+                    addScaledRow(Ab, r, c, -Ab[r][c])
     matxRound(Ab, decPts)
     X = []
-    for rows in range(len(X)):
+    for rows in range(len(Ab)):
         X.append([])
-        X[rows][0] = Ab[rows][-1]
+        X[rows].append(Ab[rows][-1])
     return X
 
 
@@ -93,8 +87,12 @@ def matxMultiply(A, B):
     return multy
 
 
-A = [[1, 2, 3],
-     [4, 5, 6],
-     [7, 8, 9]]
-b = [[2], [4], [8]]
-print gj_Solve(A, b)
+A = [[1, 0, 3, 8],
+     [6, 1, 9, 7],
+     [4, 0, 0, 7],
+     [0, 0, 0, 6]]
+b = [[2], [4], [6], [8]]
+x = gj_Solve(A, b)
+Ax = matxMultiply(A, x)
+matxRound(Ax)
+print x, Ax
